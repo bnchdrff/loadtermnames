@@ -1,0 +1,6 @@
+name = "loadtermnames"
+description = "Adds term names to term reference entity fields along with the default tid."
+core = "7.x"
+dependencies[] = "taxonomy"
+
+files[] = "loadtermnames.module"

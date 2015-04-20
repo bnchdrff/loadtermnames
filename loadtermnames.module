@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file loadtermnames.module
+ */
+
+/**
+ * Implements hook_entity_load().
+ */
+function loadtermnames_entity_load($entities, $type) {
+  $tids = array();
+
+  $term_fields = _loadtermnames_get_term_fields();
+
+  foreach ($entities as $entity) {
+    foreach ($term_fields as $term_field_name => $term_field_info) {
+      $items = field_get_items($type, $entity, $term_field_name);
+      if ($items) {
+        foreach ($items as $item) {
+          $tids[$item['tid']] = null;
+        }
+      }
+    }
+  }
+}
+
+function _loadtermnames_get_term_fields() {
+  $term_fields = &drupal_static(__FUNCTION__);
+
+  if (!isset($term_fields)) {
+    $term_fields = array_filter(field_info_field_map(), function($field) {
+      return $field["type"] == "taxonomy_term_reference";
+    });
+  }
+
+  return $term_fields;
+}
+
