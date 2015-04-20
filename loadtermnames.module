@@ -23,6 +23,10 @@ function loadtermnames_entity_load($entities, $type) {
     }
   }
 
+  if (count($tids) < 1) {
+    return;
+  }
+
   $query = db_query('SELECT tid,name FROM taxonomy_term_data WHERE tid IN (:tids)', array(':tids' => array_keys($tids)));
   $tids = $query->fetchAllAssoc('tid');
 
