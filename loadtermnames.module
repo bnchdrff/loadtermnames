@@ -22,6 +22,30 @@ function loadtermnames_entity_load($entities, $type) {
       }
     }
   }
+
+  $query = db_query('SELECT tid,name FROM taxonomy_term_data WHERE tid IN (:tids)', array(':tids' => array_keys($tids)));
+  $tids = $query->fetchAllAssoc('tid');
+
+
+  foreach ($entities as $entity) {
+    $lang = $entity->language;
+    foreach ($term_fields as $term_field_name => $term_field_info) {
+      $items = field_get_items($type, $entity, $term_field_name);
+
+      if ($items) {
+        $items_with_names = array();
+
+        foreach ($items as $item) {
+          $items_with_names[] = array(
+            'tid' => $item['tid'],
+            'name' => $tids[$item['tid']]->name,
+          );
+        }
+
+        $entity->{$term_field_name}[$lang] = $items_with_names;
+      }
+    }
+  }
 }
 
 function _loadtermnames_get_term_fields() {
