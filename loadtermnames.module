@@ -30,10 +30,15 @@ function loadtermnames_entity_load($entities, $type) {
   $query = db_query('SELECT tid,name FROM taxonomy_term_data WHERE tid IN (:tids)', array(':tids' => array_keys($tids)));
   $tids = $query->fetchAllAssoc('tid');
 
-
   foreach ($entities as $entity) {
-    $lang = $entity->language;
     foreach ($term_fields as $term_field_name => $term_field_info) {
+      // discover langue the easy way or the hard way
+      if (property_exists($entity, 'language')) {
+        $lang = $entity->language;
+      } else {
+        $lang = field_language($type, $entity, $term_field_name);
+      }
+
       $items = field_get_items($type, $entity, $term_field_name);
 
       if ($items) {
