@@ -45,7 +45,7 @@ function loadtermnames_entity_load($entities, $type) {
         $items_with_names = array();
 
         foreach ($items as $item) {
-          $items_with_names[] = array(
+          $items_with_names[$item['tid']] = array(
             'tid' => $item['tid'],
             'name' => $tids[$item['tid']]->name,
           );
